@@ -37,7 +37,6 @@ export default function CustomQuizCard({ quiz, onScoreUpdate }) {
       <div className='flex justify-between items-center'>
          <p className='text-xs bg-amber-500/20 px-2 py-1 m-2 rounded-xl font-bold text-amber-500'>category</p>
           <p className="text-xs relative bottom-2 right-2 text-gray-500 mt-1"> <span className="font-semibold">{quiz.score}</span> pts</p>
-
       </div>
       <div
         onClick={toggleCard}
