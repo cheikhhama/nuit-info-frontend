@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CustomQuizCard from "../../components/quiz/CustomQuizCard";
+import goldCoin from "../../assets/quiz/coin.png"
 export default function QuizPage() {
     const [totalScore, setTotalScore] = useState(0);
 
@@ -106,12 +107,15 @@ export default function QuizPage() {
         <div className="bg-gray-50 min-h-screen py-2 px-5">
             <div className="max-w-7xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Quiz Page</h1>
-                    <div className="bg-white px-6 py-3 rounded-lg border border-gray-200 shadow-sm">
-                        <p className="text-sm text-gray-600">Total Score</p>
+                    <h1 className="text-3xl font-bold text-gray-900">Page de quiz
+                    </h1>
+                    <div className="flex items-center justify-center  gap-2">
+
                         <p className="text-2xl font-bold text-gray-900">
-                            {totalScore} <span className="text-gray-500 text-lg">/ {totalMaxScore}</span>
+                            {totalScore}
+
                         </p>
+                        {(totalScore >= 5) ? <img className="w-10 h-10" src={goldCoin} /> : <p></p>}
                     </div>
                 </div>
 

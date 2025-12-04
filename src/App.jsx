@@ -7,6 +7,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import QuizPage from "./pages/quiz/QuizPage";
+import LearnPage from "./pages/learn/LearnPage";
 function App() {
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
               }
             />
             <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/learn" element={<LearnPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
