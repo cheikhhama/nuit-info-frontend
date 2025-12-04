@@ -6,6 +6,8 @@ import SignUpPage from "./pages/auth/SignUpPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import Card from "./components/cardConponent/card";
+import LeaderBoard from "./components/leaderBord/leaderbord";
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/sign-up" element={<SignUpPage />} />
+            <Route path="/card" element={<Card />} />
+            <Route path="/leaderbord" element={<LeaderBoard />} />
             <Route
               path="/dashboard"
               element={

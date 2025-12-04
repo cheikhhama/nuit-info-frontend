@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "./useAuth";
-import authService from "../services/authService";
+import authService from "../routes/services/authService";
 
 export default function useRegister() {
   const [isLoading, setIsLoading] = useState(false);

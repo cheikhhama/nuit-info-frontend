@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
-import authService from "../services/authService";
+import authService from "../routes/services/authService";
 import axios from "axios";
 
 export default function useLogout() {
-  
   const { setIsAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,7 +22,7 @@ export default function useLogout() {
       }
       authService.clearTokens();
       contextLogout();
-      setIsAuthenticated(true)
+      setIsAuthenticated(true);
       navigate("/auth/login");
       return true;
     } catch (err) {

@@ -1,5 +1,5 @@
-import { BASE_URL } from "../api/endPoints";
-import { AUTH_ENDPOINTS } from "../api/endPoints";
+import { BASE_URL } from "../../api/endPoints";
+import { AUTH_ENDPOINTS } from "../../api/endPoints";
 
 const authService = {
   refreshTimer: null,

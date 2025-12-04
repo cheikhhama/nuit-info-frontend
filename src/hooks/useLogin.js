@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useAuth } from "./useAuth";
-import authService from "../services/authService";
+import authService from "../routes/services/authService";
 
 export default function useLogin() {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function useLogin() {
     } catch (err) {
       // Extract error message from different response formats
       let errorMessage = "Login failed";
-      
+
       if (err.response?.data?.detail) {
         errorMessage = err.response.data.detail;
       } else if (err.response?.data?.message) {
