@@ -1,12 +1,12 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-
+import QuizPage from "./pages/quiz/QuizPage";
 function App() {
   return (
     <>
@@ -24,6 +24,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/quiz" element={<QuizPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
