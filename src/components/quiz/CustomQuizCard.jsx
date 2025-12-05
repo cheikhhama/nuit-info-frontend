@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { CustomCategory } from './CustomCategory';
 
 export default function CustomQuizCard({ quiz, onScoreUpdate }) {
   const [open, setOpen] = useState(false);
@@ -35,15 +35,14 @@ export default function CustomQuizCard({ quiz, onScoreUpdate }) {
   return (
     <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ${open ? 'col-span-1 md:col-span-2 lg:col-span-3 row-span-2' : ''}`}>
       <div className='flex justify-between items-center'>
-         <p className='text-xs bg-amber-500/20 px-2 py-1 m-2 rounded-xl font-bold text-amber-500'>category</p>
-          <p className="text-xs relative bottom-2 right-2 text-gray-500 mt-1"> <span className="font-semibold">{quiz.score}</span> pts</p>
+         <p className={`${CustomCategory(quiz.categorie)} text-xs  px-3 py-1 m-2 rounded-xl `}>{quiz.categorie}</p>
       </div>
       <div
         onClick={toggleCard}
-        className="w-full relative  bg-white p-5 cursor-pointer flex justify-between items-center "
+        className="w-full relative  bg-white px-5 py-2 cursor-pointer flex justify-between items-center "
       >
         <div className="flex-1  pr-2">
-          <h2 className="text-gray-800 font-semibold text-base">{quiz.question}</h2>
+          <h2 className="text-gray-800 font-semibold text-base">{quiz.titre}</h2>
         </div>
 
       </div>
