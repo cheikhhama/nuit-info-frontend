@@ -72,7 +72,7 @@ export default function Navbar() {
             {isOpen && (
                 <div className="md:hidden bg-white border-t border-gray-100 shadow-inner">
                     <div className="px-4 py-4 space-y-3">
-                        <Link to="/Acceuil" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
+                        <Link to="/" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
                             Acceuil
                         </Link>
                         <Link to="/classement" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
