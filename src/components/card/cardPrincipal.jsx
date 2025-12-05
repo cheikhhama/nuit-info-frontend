@@ -80,29 +80,7 @@ export default function Card() {
             );
           })}
 
-          {/* Empty State */}
-          {categories.length === 0 && (
-            <div className="col-span-full">
-              <div className="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 text-blue-600 rounded-full mb-4">
-                  <MdQuiz className="text-3xl" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  No Categories Available
-                </h3>
-                <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                  Categories will appear here once they are created. Start by adding your first quiz category.
-                </p>
-                <Link
-                  to="/create-category"
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-                >
-                  <MdAdd className="text-xl" />
-                  <span>Create First Category</span>
-                </Link>
-              </div>
-            </div>
-          )}
+        
         </div>
 
         {/* Stats Section */}
