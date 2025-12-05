@@ -11,13 +11,10 @@ export default function LeaderBoard({ players }) {
 
   const list = players || defaultPlayers;
 
-  // Trier par score décroissant
   const sortedPlayers = [...list].sort((a, b) => b.score - a.score);
 
-  // Médailles pour top 3
   const medals = ["🥇", "🥈", "🥉"];
 
-  // Fonction pour générer étoiles selon rang (max 5)
   const getStars = (rank) => {
     const fullStars = 5 - rank + 1;
     let stars = "";
