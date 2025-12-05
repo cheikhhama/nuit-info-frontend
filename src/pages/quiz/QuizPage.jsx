@@ -9,14 +9,12 @@ import Navbar from "../../components/shared/Navbar";
 import { Link } from "react-router-dom";
 
 export default function QuizPage() {
-  const [totalScore, setTotalScore] = useState(0);
+  const [totalScore, setTotalScore] = useState(null);
   const [quizzes, setQuizzes] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [answeredCount, setAnsweredCount] = useState(0);
   const [quizzesPerPage] = useState(10);
 
   // Fetch quizzes with pagination
@@ -40,7 +38,6 @@ export default function QuizPage() {
           setTotalPages(1);
         }
 
-        setAnsweredCount(0);
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         setQuizzes([]);
@@ -70,18 +67,7 @@ export default function QuizPage() {
 
   const handleScoreUpdate = (quizScore) => {
     setTotalScore((prev) => prev + quizScore);
-    setAnsweredCount((prev) => {
-      const newCount = prev + 1;
-
-      // Auto move to next page after 2 answers
-      if (newCount >= 2 && currentPage < totalPages) {
-        setTimeout(() => {
-          goToNextPage();
-        }, 1500);
-      }
-
-      return newCount;
-    });
+    setAnsweredCount((prev) => prev + 1);
   };
 
   const handleCategoryClick = (categoryName) => {
@@ -139,7 +125,7 @@ export default function QuizPage() {
           </h1>
           <div className="flex items-center justify-center gap-2 bg-white px-4 py-2 rounded-lg border border-gray-200">
            
-              {totalScore == null || totalScore == 0 ?  <Link to="/auth/login" className="text-xl sm:text-sm text-gray-900">Inscrivez-vous pour enregistrer vos réussites</Link> : totalScore}
+              {totalScore == null ?  <Link to="/auth/login." className="text-xl sm:text-sm text-gray-900">Inscrivez-vous pour enregistrer vos réussites</Link> : totalScore}
             
             {totalScore >= 5 && (
               <img className="w-8 h-8 sm:w-10 sm:h-10" src={goldCoin} alt="coin" />
