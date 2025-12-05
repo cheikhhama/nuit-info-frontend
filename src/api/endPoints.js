@@ -1,4 +1,4 @@
-export const BASE_URL = "http://api.tm-code.online/";
+export const BASE_URL = "http://api.tm-code.online";
 export const AUTH_ENDPOINTS = {
   LOGIN: "/api/login/",
   REGISTER: "/api/register/",
