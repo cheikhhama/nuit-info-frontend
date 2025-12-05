@@ -1,39 +1,38 @@
 import { useEffect, useState } from "react";
 import CustomQuizCard from "../../components/quiz/CustomQuizCard";
-import goldCoin from "../../assets/quiz/coin.png";
-import { apiGet, apiPost } from "../../services/apiService";
-import { BASE_URL, Category_ENDPOINTS, QUIZ_ENDPOINTS } from "../../api/endPoints";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from "../../components/shared/Navbar";
+import { apiGet, apiPost } from "../../services/apiService";
+import { BASE_URL, QUIZ_ENDPOINTS } from "../../api/endPoints";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth"; // Import your auth hook
+import { useAuth } from "../../hooks/useAuth";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function QuizPage() {
-  const { isAuthenticated } = useAuth(); // Get auth status
-  const [totalScore, setTotalScore] = useState(0);
-  const [quizzes, setQuizzes] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [quizzesPerPage] = useState(10);
+  const { isAuthenticated, user } = useAuth();
 
-  // Fetch quizzes with pagination
+  const [quizzes, setQuizzes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Backend pagination URLs
+  const [pageUrl, setPageUrl] = useState(`${BASE_URL}${QUIZ_ENDPOINTS.GET_ALL}`);
+  const [nextUrl, setNextUrl] = useState(null);
+  const [prevUrl, setPrevUrl] = useState(null);
+
+  const [score, setScore] = useState(user?.score || 0);
+
+  // Fetch quizzes from backend using pageUrl
   useEffect(() => {
     const fetchQuizzes = async () => {
       setLoading(true);
       try {
-        let url = `${BASE_URL}${QUIZ_ENDPOINTS.GET_ALL}?page=${currentPage}`;
-
-        const response = await apiGet(url);
+        const response = await apiGet(pageUrl);
         const data = response.data;
 
-        if (data.results) {
-          setQuizzes(data.results);
-          setTotalPages(Math.ceil(data.count / quizzesPerPage));
-        } else {
-          setQuizzes(data);
-          setTotalPages(1);
-        }
+        setQuizzes(data.results || []);
+        setNextUrl(data.next);
+        setPrevUrl(data.previous);
+
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         setQuizzes([]);
@@ -43,191 +42,170 @@ export default function QuizPage() {
     };
 
     fetchQuizzes();
-  }, [currentPage, quizzesPerPage]);
+  }, [pageUrl]);
 
+
+  // Handle score update + answer submit
   const handleScoreUpdate = async (quizScore, quizData) => {
-    
-    // Si l'utilisateur est authentifié, enregistrez la réponse
-    if (isAuthenticated) {
-      try {
-        const response = await apiPost(`${BASE_URL}${QUIZ_ENDPOINTS.VERIFY_RESPONSE}`, {
-          reponse_id: 40,
-          // reponse_id: quizData.id,
-        });
-        console.log("Réponse enregistrée:", response);
-      } catch (error) {
-        console.error("Error saving answer:", error);
+    try {
+      if (!quizData?.id) {
+        toast.error("Impossible d'envoyer la réponse (ID question manquant)");
+        return;
       }
-    } else {
-      console.log("⚠️ Utilisateur invité - Non connecté (réponses non enregistrées)");
-    }
 
-    // Mettre à jour le score uniquement si l'utilisateur est authentifié
-    if (isAuthenticated && quizScore) {
-      setTotalScore((prev) => prev + quizScore);
+      if (!isAuthenticated) {
+        toast.error("Vous devez vous connecter pour enregistrer vos réponses");
+        return;
+      }
+
+      const response = await apiPost(
+        `${BASE_URL}${QUIZ_ENDPOINTS.VERIFY_RESPONSE}`,
+        { reponse_id: quizData.id }
+      );
+
+      if (!response) {
+        toast.error("Aucune réponse reçue du serveur");
+        return;
+      }
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Réponse enregistrée avec succès");
+        setScore(response.data.score);
+        return;
+      }
+
+      if (response.data?.error) {
+        toast.error(response.data.error);
+        return;
+      }
+
+      toast.error("Réponse non reconnue du serveur");
+
+    } catch (error) {
+      console.error("Error saving answer:", error);
+
+      if (error.details?.error) {
+        toast.error(error.details.error);
+        return;
+      }
+
+      if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
+        toast.error("Erreur réseau. Vérifiez votre connexion.");
+        return;
+      }
+
+      const response = error.originalError?.response || error.response;
+
+      if (response) {
+        const status = response.status;
+        const msg = response.data?.error;
+
+        if (status === 400) toast.error(msg || "Erreur de validation");
+        else if (status === 401) toast.error("Session expirée. Veuillez vous reconnecter.");
+        else if (status === 403) toast.error("Accès refusé.");
+        else if (status === 404) toast.error("Ressource introuvable.");
+        else if (status === 409) toast.error("Vous avez déjà répondu à cette question.");
+        else toast.error("Erreur du serveur. Réessayez plus tard.");
+
+        return;
+      }
+
+      toast.error("Une erreur inattendue s'est produite.");
     }
   };
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
+  // Navigate using backend URLs
   const goToNextPage = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
+    if (nextUrl) {
+      setPageUrl(nextUrl);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const goToPreviousPage = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
+    if (prevUrl) {
+      setPageUrl(prevUrl);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  // Generate page numbers to display
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
-
-    if (endPage - startPage < maxVisible - 1) {
-      startPage = Math.max(1, endPage - maxVisible + 1);
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
 
   return (
     <div className="bg-gray-50 pt-16 min-h-screen py-4 px-4 sm:px-6 lg:px-8">
-      <Navbar />
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
-            Page de quiz
-          </h1>
+      <Toaster position="top-center" />
 
-          {/* Score Display */}
-          <div className="flex items-center justify-center gap-2 bg-white px-4 py-2 rounded-lg border border-gray-200">
+      <Navbar />
+
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Page de quiz</h1>
+
+          <div className="bg-white px-4 py-2 rounded-lg border border-gray-200">
             {isAuthenticated ? (
-              <>
-                <p className="text-xl sm:text-2xl font-bold text-gray-900">
-                  {totalScore}
-                </p>
-                {totalScore >= 5 && (
-                  <img
-                    className="w-8 h-8 sm:w-10 sm:h-10"
-                    src={goldCoin}
-                    alt="pièce"
-                  />
-                )}
-              </>
+              <p className="text-xl font-bold">{score}</p>
             ) : (
-              <Link
-                to="/auth/login"
-                className="text-sm sm:text-base text-blue-600 hover:text-blue-700 font-semibold"
-              >
-                Connectez-vous pour enregistrer la progression
+              <Link to="/auth/login" className="text-blue-600 font-semibold">
+                Connectez-vous
               </Link>
             )}
           </div>
         </div>
 
-        {/* Authentication Status Message */}
-        {isAuthenticated !== undefined && (
-          <div className={`mb-6 p-4 rounded-lg ${
+        {/* Auth status */}
+        <div
+          className={`mb-6 p-4 rounded-lg ${
             isAuthenticated
-              ? "bg-green-50 border border-green-200"
-              : "bg-yellow-50 border border-yellow-200"
-          }`}>
-            <p className={`text-sm font-medium ${
-              isAuthenticated
-                ? "text-green-800"
-                : "text-yellow-800"
-            }`}>
-              {isAuthenticated
-                ? " Vous êtes connecté - Vos réponses sont enregistrées"
-                : " Vous n'êtes pas connecté - Les réponses ne seront pas enregistrées"}
-            </p>
-          </div>
-        )}
+              ? "bg-green-50 border border-green-200 text-green-800"
+              : "bg-yellow-50 border border-yellow-200 text-yellow-800"
+          }`}
+        >
+          {isAuthenticated
+            ? "Vous êtes connecté - Vos réponses sont enregistrées"
+            : "Vous n'êtes pas connecté - Les réponses ne seront pas enregistrées"}
+        </div>
 
-        {/* Quizzes Grid */}
+        {/* Quizzes */}
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-300 border-t-blue-600"></div>
+            <div className="animate-spin h-10 w-10 border-4 border-gray-300 border-t-blue-600 rounded-full"></div>
           </div>
         ) : quizzes.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 auto-rows-max mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {quizzes.map((quiz) => (
                 <CustomQuizCard
                   key={quiz.id}
                   quiz={quiz}
-                  onScoreUpdate={(score) =>
-                    handleScoreUpdate(score, quiz)
-                  }
+                  onScoreUpdate={(score) => handleScoreUpdate(score, quiz)}
                   isAuthenticated={isAuthenticated}
                 />
               ))}
             </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 flex-wrap">
-                <button
-                  onClick={goToPreviousPage}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-gray-200 text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition font-medium text-sm sm:text-base"
-                >
-                  <ChevronLeft size={18} />
-                  <span className="hidden sm:inline">Précédent</span>
-                </button>
+            {/* Pagination Buttons */}
+            <div className="flex justify-center gap-4 mb-8">
+              <button
+                onClick={goToPreviousPage}
+                disabled={!prevUrl}
+                className="flex items-center px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+              >
+                <ChevronLeft size={18} /> Précédent
+              </button>
 
-                {/* Page Numbers */}
-                <div className="flex gap-2 flex-wrap justify-center">
-                  {getPageNumbers().map((pageNum) => (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-2 sm:px-3 py-2 rounded-lg transition font-medium text-sm sm:text-base ${
-                        currentPage === pageNum
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={goToNextPage}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-gray-200 text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition font-medium text-sm sm:text-base"
-                >
-                  <span className="hidden sm:inline">Suivant</span>
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            )}
-
-            {/* Page Info */}
-            {totalPages > 1 && (
-              <div className="text-center text-gray-600 text-xs sm:text-sm mb-4">
-                Page {currentPage} sur {totalPages}
-              </div>
-            )}
+              <button
+                onClick={goToNextPage}
+                disabled={!nextUrl}
+                className="flex items-center px-4 py-2 bg-gray-200 rounded-lg disabled:opacity-50"
+              >
+                Suivant <ChevronRight size={18} />
+              </button>
+            </div>
           </>
         ) : (
-          <div className="flex justify-center py-12">
-            <p className="text-gray-500">Aucun quiz disponible</p>
-          </div>
+          <p className="text-center text-gray-500 py-12">Aucun quiz disponible</p>
         )}
       </div>
     </div>

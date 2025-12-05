@@ -20,7 +20,7 @@ export default function Navbar() {
                     <Link to="/Acceuil" className="shrink-0 flex items-center gap-2">
                         <img src="https://iscae.mr/sites/default/files/logo-iscae.png" alt="Logo" className="w-10 h-10" />
                         <img src="https://www.nuitdelinfo.com/img/logo_n2i_color_moon.svg" alt="Logo" className="w-10 h-10" />
-                        <span className="text-blue-600 text-lg font-bold">MyProducts</span>
+                        <span className="text-blue-600 text-lg font-bold">Libér’Numerique</span>
                     </Link>
                     {/* --- Fin Partie Gauche --- */}
 
@@ -29,11 +29,9 @@ export default function Navbar() {
                         <Link to="/" className="text-gray-600 hover:text-blue-600 font-semibold transition">
                             Acceuil
                         </Link>
-                        <Link to="/statics" className="text-gray-600 hover:text-blue-600 font-semibold transition">
-                            Statistique
-                        </Link>
-                        <Link to="/leaderboard" className="text-gray-600 hover:text-blue-600 font-semibold transition">
-                            leaderboard
+                       
+                        <Link to="/classement" className="text-gray-600 hover:text-blue-600 font-semibold transition">
+                            Classement
                         </Link>
                         <Link to="/learn" className="text-gray-600 hover:text-blue-600 font-semibold transition">
                             Apprendre
@@ -43,13 +41,14 @@ export default function Navbar() {
                         </Link>
                         {isAuthenticated ? (
                             <button onClick={logout} disabled={isLoading} className="bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 px-5 py-2 rounded-full font-medium transition">
-                                {isLoading ? "..." : "Logout"}
+                                {isLoading ? "Déconnexion..." : "Déconnexion"}
                             </button>
                         ) : (
                             <div className="flex items-center gap-3">
                                 {/* Bouton Login (Contour) */}
-                                <Link to="/auth/login" className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-1.5 rounded text-sm font-medium transition">
-                            Login
+                                <Link to="/auth/login" className="bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 px-5 py-2 rounded-full font-medium transition">
+                            Se connecter
+
                             </Link> 
                                 {/* Bouton Register (Plein) - NOUVEAU */}
                                 
@@ -76,23 +75,23 @@ export default function Navbar() {
                         <Link to="/Acceuil" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
                             Acceuil
                         </Link>
-                        <Link to="/statistique" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
-                            Statistique
+                        <Link to="/classement" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
+                            Classement
                         </Link>
-                              <Link to="/leaderBord" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
-                            LeaderBord
-                        </Link> 
                         <Link to="/learn" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
                             Apprendre
                         </Link>
+                        <Link to="/quiz" className="block text-gray-700 hover:text-blue-600 font-medium text-lg px-2 py-1">
+                            Quiz
+                        </Link>
                         {isAuthenticated ? (
                             <button onClick={logout} disabled={isLoading} className="w-full text-left text-red-600 font-medium text-lg px-2 py-1">
-                                Logout
+                                {isLoading ? "Déconnexion..." : "Déconnexion"}
                             </button>
                         ) : (
                            <div className="flex flex-col gap-3 mt-4">
-                               <Link to="/auth/login" className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-1.5 rounded text-sm font-medium transition">
-                            Login
+                               <Link to="/auth/login" className="w-full text-left text-blue-600 font-medium text-lg px-2 py-1">
+                            Se connecter
                             </Link> 
                            </div>
                         )}

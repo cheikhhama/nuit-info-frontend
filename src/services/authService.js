@@ -54,7 +54,7 @@ const authService = {
     authService.failedQueue = [];
 
     // Redirect to login
-    window.location.href = "/login";
+    window.location.href = "/auth/login";
   },
 
   // Schedule automatic token refresh

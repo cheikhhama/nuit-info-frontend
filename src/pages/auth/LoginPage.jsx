@@ -17,16 +17,16 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-
   const { login, isLoading } = useLogin();
+
   const validator = (username, password) => {
     const errors = {};
-    if (!username) errors.username = "Username is required";
+    if (!username) errors.username = "Le nom d'utilisateur est requis";
     else if (!validateUsername(username))
-      errors.username = "Invalid Username format";
-    if (!password) errors.password = "Password is required";
+      errors.username = "Format du nom d'utilisateur invalide";
+    if (!password) errors.password = "Le mot de passe est requis";
     else if (!validatePassword(password))
-      errors.password = "Password must be at least 6 characters";
+      errors.password = "Le mot de passe doit contenir au moins 6 caractères";
     return errors;
   };
 
@@ -38,47 +38,48 @@ export default function LoginPage() {
       return;
     }
     setErrors({});
-
     const data = {
       username: username,
       password: password,
     };
-    await login(`${BASE_URL}${AUTH_ENDPOINTS.LOGIN}`, data, "/dashboard/");
+    await login(`${BASE_URL}${AUTH_ENDPOINTS.LOGIN}`, data, "/");
   };
 
   return (
-      <div className="w-full h-screen flex justify-center items-center bg-gray-50">
-        <Navbar/>
-        <Toaster position="bottom-center" reverseOrder={false} />
-        <CustomAuthForm onSubmit={handleSubmit}>
-          <CustomAuthHeaderText
-            title="Welcome Back"
-            subtitle="Sign in to your account to continue"
-          />
-          <CustomAuthInput
-            type="username"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            error={errors.username}
-          />
-          <CustomAuthInput
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            error={errors.password}
-          />
-          <br />
-          
-          <CustomAuthButton type="submit" text={isLoading ? "Loading..." : "Login" } />
+    <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+      <Navbar />
+      <Toaster position="top-center" reverseOrder={false} />
+      <CustomAuthForm onSubmit={handleSubmit}>
+        <CustomAuthHeaderText
+          title="Bienvenue"
+          subtitle="Connectez-vous à votre compte pour continuer"
+        />
+        <CustomAuthInput
+          type="username"
+          placeholder="Entrez votre nom d'utilisateur"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          error={errors.username}
+        />
+        <CustomAuthInput
+          type="password"
+          placeholder="Entrez votre mot de passe"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          error={errors.password}
+        />
+        <br />
 
-          <CustomAuthText
-            to="/auth/sign-up"
-            text="Don't have an account?"
-            linkText="Create one"
-          />
-        </CustomAuthForm>
-      </div>
+        <CustomAuthButton 
+          type="submit" 
+          text={isLoading ? "Chargement..." : "Se connecter"} 
+        />
+        <CustomAuthText
+          to="/auth/sign-up"
+          text="Vous n'avez pas de compte?"
+          linkText="En créer un"
+        />
+      </CustomAuthForm>
+    </div>
   );
 }

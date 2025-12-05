@@ -15,6 +15,13 @@ export const AuthProvider = ({ children }) => {
         await authService.init();
         const authenticated = authService.isAuthenticated();
         setIsAuthenticated(authenticated);
+
+        if (authenticated) {
+          const storedUser = localStorage.getItem("user");
+          if (storedUser) {
+            setUser(JSON.parse(storedUser));
+          }
+        }
       } catch (error) {
         console.error("Auth check failed:", error);
         setIsAuthenticated(false);
@@ -30,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
+    localStorage.removeItem("user");
     authService.clearTokens();
   }, []);
 
@@ -38,6 +46,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
     if (userData) {
       setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
     }
   }, []);
 

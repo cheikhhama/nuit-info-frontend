@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 import QuizPage from "./pages/quiz/QuizPage";
 import LearnPage from "./pages/learn/LearnPage";
 import LeaderBoard from "./pages/leaderboard/LeaderBoard";
+import Card from "./components/card/cardPrincipal";
 function App() {
   return (
     <>
@@ -17,10 +18,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/sign-up" element={<SignUpPage />} />
-           
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/learn" element={<LearnPage />} />
-            <Route path="/leaderboard" element={< LeaderBoard/>} />
+            <Route path="/classement" element={< LeaderBoard/>} />
+            <Route path="/card" element={<Card/>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -21,8 +21,13 @@ export default function useLogin() {
         // Store tokens using authService
         authService.setTokens(access, refresh, expires_in || 3600);
 
-        // Update auth context
-        login(res.data.user || null);
+        // Update auth context with user data from response
+        const userData = {
+            username: res.data.username,
+            email: res.data.email,
+            score: res.data.score
+        };
+        login(userData);
 
         // Show success message
         toast.success("Login successful!");

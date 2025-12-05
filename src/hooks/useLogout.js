@@ -9,7 +9,7 @@ export default function useLogout() {
   const { setIsAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { logout: contextLogout } = useAuth();
+  const { logout: contextLogout, user } = useAuth();
 
   const handleLogout = async (endPoint = null) => {
     setIsLoading(true);
@@ -23,7 +23,6 @@ export default function useLogout() {
       }
       authService.clearTokens();
       contextLogout();
-      setIsAuthenticated(true)
       navigate("/auth/login");
       return true;
     } catch (err) {

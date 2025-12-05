@@ -2,26 +2,18 @@ import React, { useState } from 'react';
 import { ChevronDown, Lightbulb } from 'lucide-react';
 
 export default function CustomLearnCard({ item }) {
-    const [open, setOpen] = useState(false);
-
-    const toggleCard = () => {
-        setOpen(!open);
-    };
+  
 
     return (
         <div className={`bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col h-full ${open ? 'row-span-2' : ''}`}>
-            <div
-                onClick={toggleCard}
-                className="p-2 cursor-pointer flex-1"
-            >
-               
+            <div className="p-2 cursor-pointer flex-1" >   
 
                 <p className="text-gray-800 p-3 font-semibold text-base">
                     {item.titre}
                 </p>
             </div>
 
-            {open && (
+           
                 <div className="px-5 pb-6 bg-white">
                     <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-100 flex items-start gap-3">
                         <Lightbulb className="w-5 h-5 text-yellow-500 shrink-0 mt-0.5" />
@@ -33,7 +25,7 @@ export default function CustomLearnCard({ item }) {
                         </div>
                     </div>
                 </div>
-            )}
+            
         </div>
     );
 }

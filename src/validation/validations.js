@@ -10,3 +10,4 @@ export const validateUsername = (username) => {
 export const validatePassword = (password) => {
   return password.length >= 6;
 };
+

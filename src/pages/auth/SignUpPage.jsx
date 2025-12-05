@@ -7,26 +7,28 @@ import CustomAuthButton from "../../components/auth/CustomAuthButton";
 import CustomAuthText from "../../components/auth/CustomAuthText";
 import { AUTH_ENDPOINTS, BASE_URL } from "../../api/endPoints";
 import useRegister from "../../hooks/useRegister";
-import { validatePassword } from "../../validation/validations";
+import { validateEmail, validatePassword, validateUsername } from "../../validation/validations";
 import Navbar from "../../components/shared/Navbar";
 
-const validator = (username, password, confirmPassword) => {
+const validator = (username, password, email, confirmPassword) => {
   const errors = {};
-  if (!username) errors.username = "Username is required";
+  if (!username) errors.username = "Le nom d'utilisateur est requis";
   else if (username.length < 2)
-    errors.username = "Username must be at least 2 characters";
-
-  if (!password) errors.password = "Password is required";
+    errors.username = "Le nom d'utilisateur doit contenir au moins 2 caractères";
+  if (!password) errors.password = "Le mot de passe est requis";
   else if (!validatePassword(password))
-    errors.password = "Password must be at least 6 characters";
-  if (!confirmPassword) errors.confirmPassword = "Confirm password is required";
+    errors.password = "Le mot de passe doit contenir au moins 6 caractères";
+  if (!confirmPassword) errors.confirmPassword = "Veuillez confirmer votre mot de passe";
   else if (password !== confirmPassword)
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "Les mots de passe ne correspondent pas";
+  else if (!email) errors.email = "L'email est requis";
+  else if (!validateEmail(email)) errors.email = "Format d'email invalide";
   return errors;
 };
 
 export default function SignUpPage() {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -34,63 +36,65 @@ export default function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const newErrors = validator(username, password, confirmPassword);
+    const newErrors = validator(username, password, email, confirmPassword);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-
     setErrors({});
     await register(
       `${BASE_URL}${AUTH_ENDPOINTS.REGISTER}`,
-      { username, password },
+      { username, email, password },
       "/auth/login"
     );
   };
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-gray-50">
-      <Navbar/>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Navbar />
+      <Toaster position="top-center" reverseOrder={false} />
       <CustomAuthForm onSubmit={handleSubmit}>
         <CustomAuthHeaderText
-          title="Welcome Back"
-          subtitle="Sign in to your account to continue"
+          title="Créer un compte"
+          subtitle="Inscrivez-vous pour accéder à votre compte"
         />
         <CustomAuthInput
           type="text"
-          placeholder="Enter your username"
+          placeholder="Entrez votre nom d'utilisateur"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           error={errors.username}
         />
-
+        <CustomAuthInput
+          type="email"
+          placeholder="Entrez votre email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          error={errors.email}
+        />
         <CustomAuthInput
           type="password"
-          placeholder="Enter your password"
+          placeholder="Entrez votre mot de passe"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={errors.password}
         />
         <CustomAuthInput
           type="password"
-          placeholder="Confirm your password"
+          placeholder="Confirmez votre mot de passe"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           error={errors.confirmPassword}
         />
         <br />
-
         <CustomAuthButton
           type="submit"
-          text={isLoading ? "Loading..." : "Sign Up"}
+          text={isLoading ? "Chargement..." : "S'inscrire"}
         />
-
         <CustomAuthText
           to="/auth/login"
-          text="Already have an account?"
-          linkText="Login here"
+          text="Vous avez déjà un compte?"
+          linkText="Se connecter"
         />
       </CustomAuthForm>
     </div>

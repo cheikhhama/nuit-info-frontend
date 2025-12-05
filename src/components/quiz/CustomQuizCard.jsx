@@ -18,10 +18,8 @@ export default function CustomQuizCard({ quiz, onScoreUpdate }) {
     setFadeOut(false);
     setAnswered(true);
 
-    // If answer is correct, add quiz score to total
-    if (isCorrect) {
-      onScoreUpdate(quiz.score); // Send quiz's own score value
-    }
+    // Send selected answer ID to parent component regardless of correctness
+    onScoreUpdate(quizNumber);
 
     setTimeout(() => {
       setFadeOut(true);
