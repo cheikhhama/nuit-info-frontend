@@ -11,6 +11,7 @@ import {
 import useLogin from "../../hooks/useLogin";
 import { AUTH_ENDPOINTS, BASE_URL } from "../../api/endPoints";
 import { Toaster } from "react-hot-toast";
+import Navbar from "../../components/shared/Navbar";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -47,6 +48,7 @@ export default function LoginPage() {
 
   return (
       <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+        <Navbar/>
         <Toaster position="bottom-center" reverseOrder={false} />
         <CustomAuthForm onSubmit={handleSubmit}>
           <CustomAuthHeaderText

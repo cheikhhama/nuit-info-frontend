@@ -8,6 +8,7 @@ import CustomAuthText from "../../components/auth/CustomAuthText";
 import { AUTH_ENDPOINTS, BASE_URL } from "../../api/endPoints";
 import useRegister from "../../hooks/useRegister";
 import { validatePassword } from "../../validation/validations";
+import Navbar from "../../components/shared/Navbar";
 
 const validator = (username, password, confirmPassword) => {
   const errors = {};
@@ -50,6 +51,7 @@ export default function SignUpPage() {
 
   return (
     <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+      <Navbar/>
       <Toaster position="bottom-center" reverseOrder={false} />
       <CustomAuthForm onSubmit={handleSubmit}>
         <CustomAuthHeaderText

@@ -32,8 +32,8 @@ export default function Navbar() {
                         <Link to="/statics" className="text-gray-600 hover:text-blue-600 font-semibold transition">
                             Statistique
                         </Link>
-                        <Link to="/leaderBord" className="text-gray-600 hover:text-blue-600 font-semibold transition">
-                            leaderBord
+                        <Link to="/leaderboard" className="text-gray-600 hover:text-blue-600 font-semibold transition">
+                            leaderboard
                         </Link>
                         <Link to="/learn" className="text-gray-600 hover:text-blue-600 font-semibold transition">
                             Apprendre

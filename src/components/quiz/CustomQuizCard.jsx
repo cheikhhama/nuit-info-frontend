@@ -33,7 +33,7 @@ export default function CustomQuizCard({ quiz, onScoreUpdate }) {
   };
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden transition-all duration-300 ${open ? 'col-span-1 md:col-span-2 lg:col-span-3 row-span-2' : ''}`}>
+    <div className={`bg-white border border-gray-200 rounded-lg w-full overflow-hidden transition-all duration-300 ${open ? 'col-span-1 md:col-span-2 lg:col-span-3 row-span-2' : ''}`}>
       <div className='flex justify-between items-center'>
          <p className={`${CustomCategory(quiz.categorie)} text-xs  px-3 py-1 m-2 rounded-xl `}>{quiz.categorie}</p>
       </div>

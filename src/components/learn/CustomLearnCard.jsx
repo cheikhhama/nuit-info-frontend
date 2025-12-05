@@ -14,15 +14,10 @@ export default function CustomLearnCard({ item }) {
                 onClick={toggleCard}
                 className="p-2 cursor-pointer flex-1"
             >
-                <div className="flex justify-between items-start mb-4">
-                    <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full">
-                        {item.category}
-                    </span>
-                    
-                </div>
+               
 
                 <p className="text-gray-800 p-3 font-semibold text-base">
-                    {item.information}
+                    {item.titre}
                 </p>
             </div>
 
@@ -33,7 +28,7 @@ export default function CustomLearnCard({ item }) {
                         <div>
                             <h3 className="text-sm font-bold text-yellow-800 mb-1">Solution</h3>
                             <p className="text-sm text-yellow-700 leading-relaxed">
-                                {item.solution}
+                                {item.contenu}
                             </p>
                         </div>
                     </div>
