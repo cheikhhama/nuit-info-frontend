@@ -92,7 +92,7 @@ export default function SignUpPage() {
           text={isLoading ? "Chargement..." : "S'inscrire"}
         />
         <CustomAuthText
-          to="/auth/login"
+          href="/auth/login"
           text="Vous avez déjà un compte?"
           linkText="Se connecter"
         />

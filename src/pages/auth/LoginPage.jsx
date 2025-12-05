@@ -75,7 +75,7 @@ export default function LoginPage() {
           text={isLoading ? "Chargement..." : "Se connecter"} 
         />
         <CustomAuthText
-          to="/auth/sign-up"
+          href="/auth/sign-up/"
           text="Vous n'avez pas de compte?"
           linkText="En créer un"
         />
